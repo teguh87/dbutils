@@ -2,8 +2,8 @@
 import datetime
 import json
 import time
-
-from sqlalchemy import MetaData
+from contextlib import contextmanager
+from sqlalchemy import MetaData, event
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 
@@ -11,12 +11,42 @@ __all__ = ['Session', 'metadata', 'Model', 'SchemaEncoder']
 
 # Remove expire_on_commit=False if autorefreshing of committed objects is
 # desireable.
-Session = scoped_session(sessionmaker(expire_on_commit=False))
+BaseSession = scoped_session(sessionmaker(expire_on_commit=False))
 metadata = MetaData()
 
 # Declarative base
 
 from sqlalchemy.ext.declarative import declarative_base
+
+class Session(BaseSession):
+    def __init__(self, *a, **kw):
+        super(Session, self).__init__(*a, **kw)
+        self._in_atomic = False
+
+    @contextmanager
+    def atomic(self):
+        """Transaction context manager.
+
+        Will commit the transaction on successful completion
+        of the block, or roll it back on error.
+
+        Supports nested usage (via savepoints).
+
+        """
+        nested = self._in_atomic
+        self.begin(nested=nested)
+        self._in_atomic = True
+
+        try:
+            yield
+        except:
+            self.rollback()
+            raise
+        else:
+            self.commit()
+        finally:
+            if not nested:
+                self._in_atomic = False
 
 class _Base(object):
     """ Metaclass for the Model base class."""
@@ -33,6 +63,7 @@ class _Base(object):
         return Session.query(cls).filter_by(**kw).first()
 
     @classmethod
+    @event.listens_for(Session, 'after_begin')
     def get_or_create(cls, **kw):
         r = cls.get_by(**kw)
         if r:
@@ -41,12 +72,14 @@ class _Base(object):
         return cls.create(**kw)
 
     @classmethod
+    @event.listens_for(Session, 'after_begin')
     def create(cls, **kw):
         r = cls(**kw)
         Session.add(r)
         return r
 
     @classmethod
+    @event.listens_for(Session, 'after_begin')
     def insert(cls, **kw):
         Session.execute(cls.__table__.insert(values=kw)).close()
 
@@ -62,6 +95,7 @@ class _Base(object):
     def count(cls):
         return Session.query(cls).count()
 
+    @event.listens_for(Session, 'after_begin')
     def delete(self):
         Session.delete(self)
 
