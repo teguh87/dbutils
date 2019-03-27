@@ -25,7 +25,6 @@ def get_new_session(connection=None, autocommit=None):
 
 
 def autocommit_scope(using=None):
-    """自动提交事务操作装饰器。"""
 
     def decorator(func):
 
@@ -40,7 +39,6 @@ def autocommit_scope(using=None):
 
             session = get_new_session(connection=using, autocommit=True)
             if has_classarg:
-                # 处理类相关方法传参方式
                 classarg = args[0]
                 args = args[1:]
                 return func(classarg, session, *args, **kwargs)
@@ -53,7 +51,6 @@ def autocommit_scope(using=None):
   
   
 class Atomic(object):
-    """sqlalchemy orm事务上下文管理器。"""
 
     def __init__(self, session=None, using=None):
         nested = True
@@ -91,7 +88,6 @@ class Atomic(object):
 
 
 def transaction_scope(using=None):
-    """单个事务管理器装饰器。"""
 
     def decorator(func):
 
@@ -106,7 +102,6 @@ def transaction_scope(using=None):
 
             with Atomic(using=using) as session:
                 if has_classarg:
-                    # 处理类相关方法传参方式
                     classarg = args[0]
                     args = args[1:]
                     return func(classarg, session, *args, **kwargs)
