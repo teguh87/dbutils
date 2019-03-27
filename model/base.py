@@ -9,12 +9,10 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 __all__ = ['Session', 'metadata', 'Model', 'SchemaEncoder']
 
-
 # Remove expire_on_commit=False if autorefreshing of committed objects is
 # desireable.
 Session = scoped_session(sessionmaker(expire_on_commit=False))
 metadata = MetaData()
-
 
 # Declarative base
 
