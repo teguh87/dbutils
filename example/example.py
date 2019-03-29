@@ -22,6 +22,12 @@ engine = connection(
     dbname="example"
 )
 
+class Member(User):
+    __tablename__= 'member'
+    __mapper_args__={
+        'polymorphic_identity':'member'
+    }
+
 def main():
     model.metadata.create_all(engine.make_connection())
 
