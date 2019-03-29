@@ -10,5 +10,5 @@ setup(
     author_email='teguhdev87@gmail.com',
     description='This utils for sqlalchemy utils',
     license='Apache',
-    keywords='sqlalchemy, psycopg2',
+    keywords='sqlalchemy, psycopg2, PyYaml',
 )
