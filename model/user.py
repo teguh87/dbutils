@@ -9,13 +9,3 @@ class User(Model):
     __tablename__ = 'auth_user'
 
     id          = Column(Integer, name="id", primary_key=True)
-    email       = Column(String(75))
-    first_name  = Column(String(30))
-    last_name   = Column(String(30))
-    is_active   = Column(Boolean, unique=False, default=True)
-    username    = Column(String(30), unique=True, nullable=False),
-    password    = Column(String(128), nullable=False)
-    discriminator = Column(String(8))
-
-
-    __mapper_args__ = {'polymorphic_on' : discriminator}

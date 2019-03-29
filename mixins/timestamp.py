@@ -15,7 +15,7 @@ class BaseExtension(MapperExtension):
         instance.updated_at = datetime.datetime.now()
 
 class TimestampMixin(BaseMixin):
-    _repr_hide = ['created_at', 'updated_at']
+    # _repr_hide = ['created_at', 'updated_at']
 
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
