@@ -2,9 +2,7 @@ from sqlalchemy import Column, String, Boolean
 from model.base import Model
 from mixins.timestamp import TimestampMixin
 
-model = Model()
-
-class User(model, TimestampMixin):
+class User(Model, TimestampMixin):
     email       = Column(String(75), 'email')
     first_name  = Column(String(30), 'first_name')
     last_name   = Column(String(30), 'last_name')
