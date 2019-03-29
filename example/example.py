@@ -11,11 +11,20 @@ from mixins.base import BaseMixin
 from model.user import User
 from mixins.file import FileMixins
 
+model = Model()
 
+engine = connection(
+    dbtype="postgresql",
+    username= "example",
+    password= "example123",
+    dbhost="localhost",
+    dbport="5432",
+    dbname="example"
+)
 
 def main():
-    pass
+    model.metadata.create_all(engine.make_connection())
 
 if __name__=='__main__':
-    pass
+    main()
 

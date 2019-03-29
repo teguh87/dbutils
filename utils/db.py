@@ -16,11 +16,14 @@ class connection(object):
                 self.kwargs = config_yaml.get('db_config')
 
     def _build_conection_string(self):
-        return UnseenFormatter(self._connection_string(), **self.kwargs)
+        _params = self.kwargs.get('kwargs')
+        _fmt =  UnseenFormatter()
+        _format = _fmt.format(self._connection_string(), **_params)
+        return _format
 
     def _connection_string(self):
         _str_connection = ''
-        dbtype = self.kwargs.get('dbtype')
+        dbtype = self.kwargs.get('kwargs').get('dbtype')
         if dbtype:
             if dbtype == 'sqlite':
                 _str_connection = 'sqlite:///{dbpath}'
@@ -38,4 +41,6 @@ class connection(object):
         return _str_connection
 
     def make_connection(self):
-        return create_engine(self._build_conection_string())
+        connection_string = self._build_conection_string()
+        print(connection_string)
+        return create_engine(connection_string)
