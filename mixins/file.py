@@ -7,5 +7,5 @@ class FileMixins(TimestampMixin):
     size = Column(Integer(), name="size")
 
 
-    def __repr__((self):
+    def __repr__(self):
         pass
