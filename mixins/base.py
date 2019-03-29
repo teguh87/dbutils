@@ -1,7 +1,6 @@
 import uuid
 from abc import ABCMeta
 from sqlalchemy import Column, String
-from sqlalchemy.ext.declarative import declared_attr
 
 def generate_uuid():
     return str(uuid.uuid4())
