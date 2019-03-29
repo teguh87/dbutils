@@ -11,42 +11,42 @@ __all__ = ['Session', 'metadata', 'Model', 'SchemaEncoder']
 
 # Remove expire_on_commit=False if autorefreshing of committed objects is
 # desireable.
-BaseSession = scoped_session(sessionmaker(expire_on_commit=False))
+Session = scoped_session(sessionmaker(expire_on_commit=False))
 metadata = MetaData()
 
 # Declarative base
 
 from sqlalchemy.ext.declarative import declarative_base
 
-class Session(BaseSession):
-    def __init__(self, *a, **kw):
-        super(Session, self).__init__(*a, **kw)
-        self._in_atomic = False
+# class Session(BaseSession):
+#     def __init__(self, *a, **kw):
+#         super(Session, self).__init__(*a, **kw)
+#         self._in_atomic = False
 
-    @contextmanager
-    def atomic(self):
-        """Transaction context manager.
+#     @contextmanager
+#     def atomic(self):
+#         """Transaction context manager.
 
-        Will commit the transaction on successful completion
-        of the block, or roll it back on error.
+#         Will commit the transaction on successful completion
+#         of the block, or roll it back on error.
 
-        Supports nested usage (via savepoints).
+#         Supports nested usage (via savepoints).
 
-        """
-        nested = self._in_atomic
-        self.begin(nested=nested)
-        self._in_atomic = True
+#         """
+#         nested = self._in_atomic
+#         self.begin(nested=nested)
+#         self._in_atomic = True
 
-        try:
-            yield
-        except:
-            self.rollback()
-            raise
-        else:
-            self.commit()
-        finally:
-            if not nested:
-                self._in_atomic = False
+#         try:
+#             yield
+#         except:
+#             self.rollback()
+#             raise
+#         else:
+#             self.commit()
+#         finally:
+#             if not nested:
+#                 self._in_atomic = False
 
 class _Base(object):
     """ Metaclass for the Model base class."""
