@@ -3,6 +3,7 @@ from model.base import Model
 from mixins.timestamp import TimestampMixin
 
 class User(Model, TimestampMixin):
+    
     __abstract__ = True
 
     __tablename__ = 'user'
