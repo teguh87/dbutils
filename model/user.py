@@ -14,3 +14,7 @@ class User(Model, TimestampMixin):
     is_active   = Column(Boolean, unique=False, default=True)
     username    = Column(String(30), unique=True, nullable=False),
     password    = Column(String(128), nullable=False)
+    discriminator = Column(String(8))
+
+
+    __mapper_args__ = {'polymorphic_on' : discriminator}
