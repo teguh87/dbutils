@@ -1,6 +1,5 @@
 from sqlalchemy import Column, String, Integer, Boolean
 from model.base import Model
-from mixins.timestamp import TimestampMixin
 
 class User(Model):
     # __abstract__ = True
